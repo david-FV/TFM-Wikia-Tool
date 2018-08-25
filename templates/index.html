@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/webcola/WebCola/cola.min.js"></script>
+    <script src="https://unpkg.com/weaverjs@1.2.0/dist/weaver.min.js"></script>
+    <script src="{{ url_for('static', filename='cytoscape-cola.js') }}"></script>
+    <script src="{{ url_for('static', filename='cytoscape-cose-bilkent.js') }}"></script>
+    <script src="{{ url_for('static', filename='cytoscape-spread.js') }}"></script>
+    <script src="{{ url_for('static', filename='code.js') }}"></script>
+
+    <!-- for testing with local version of cytoscape.js -->
+    <!--<script src="../cytoscape.js/build/cytoscape.js"></script>-->
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="sidenav">
+    <form id="form_data">
+        <p>Wiki:
+            <select name="dump">
+                {% for k, v in dumps.items() %}
+       <option value="{{ k }}">{{ v }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>Tipo grafo:
+            <select name="tipo">
+                <option value="users">Usuarios</option>
+                <option value="pages">Páginas</option>
+            </select>
+        </p>
+        <p>Layout:
+            <select name="layout">
+                <option value="cola">Cola</option>
+                <option value="cose-bilkent">Cose-Bilkent</option>
+                <option value="spread">Spread</option>
+            </select>
+        </p>
+        <!--<p>Peso min arista <br><br>-->
+            <!--<input type=text size=5 name=edgeweight value="1"></p>-->
+        <div class="slidecontainer">
+            <p>Peso min arista: <span id="demo"></span></p>
+          <input type="range" min="1" max="100" value="1" class="slider" id="myRange" name="edgeweight">
+        </div>
+        <script>
+            var slider = document.getElementById("myRange");
+            var output = document.getElementById("demo");
+            output.innerHTML = slider.value;
+
+            slider.oninput = function() {
+            output.innerHTML = this.value;
+            }
+        </script>
+        <p>Métrica:<br><br>
+            <select name="metrica">
+                <option value="degree">Degree centrality</option>
+                <option value="betweennes">Betweennes centrality</option>
+                <option value="eigenvector">Eigenvector centrality</option>
+                <option value="pagerank">PageRank</option>
+                <option value="clustering">Clustering coefficient</option>
+            </select>
+        </p>
+        <p>Eliminar usuarios anónimos <input type=checkbox name=anonimos></p>
+        <p>Eliminar etiquetas de anónimos <input type=checkbox name=labels checked></p>
+        <p>Datos:</p>
+        <p>Nº nodos:  <span id="nodos"></span></p>
+        <p>Nº aristas:  <span id="aristas"></span></p>
+    </form>
+    <br>
+    <button id=calculate>Genera grafo</button>
+</div>
+<!-- Page content -->
+<div class="main">
+    <div id="cy"></div>
+</div>
+</body>
+</html>
